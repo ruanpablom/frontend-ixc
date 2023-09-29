@@ -17,6 +17,7 @@ function UserProvider({
   const [user, setUser] = useState<UserContextData['user']>({
     id: '1',
     username: 'ruanpablom',
+    role: 'admin',
   } as UserContextData['user']);
 
   return (

@@ -19,7 +19,7 @@ export function MessagesList({ messages }: MessagesListProps): JSX.Element {
   }, [messages.length]);
 
   return (
-    <ul id="messages" className="flex flex-col gap-4 items-end">
+    <ul id="messages" className="flex flex-col gap-4 items-end overflow-auto">
       {messages.map(message => (
         <MessageItem key={message.id} message={message} />
       ))}
