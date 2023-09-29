@@ -1,21 +1,23 @@
 import { useUser } from '@/contexts/user';
+import { UserRole } from '@/models/user';
+import { verifyRole } from '@/utils/verifyRole';
 import { ReactNode } from 'react';
 
 type ProtectedRouteProps = {
   children: ReactNode;
+  permission: UserRole;
+  erroElement: ReactNode;
 };
 
-export function ProtectedRoute({ children }: ProtectedRouteProps): JSX.Element {
+export function ProtectedRoute({
+  children,
+  erroElement,
+  permission,
+}: ProtectedRouteProps): JSX.Element {
   const { user } = useUser();
 
-  if (!(user.role === 'admin')) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen">
-        <h1 className="text-4xl font-semibold">Acesso negado</h1>
-        <p className="text-xl font-medium">Você não tem acesso a essa página</p>
-      </div>
-    );
+  if (verifyRole(permission, user.role)) {
+    return children as JSX.Element;
   }
-
-  return children as JSX.Element;
+  return erroElement as JSX.Element;
 }
