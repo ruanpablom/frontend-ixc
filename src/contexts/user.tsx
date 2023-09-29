@@ -1,12 +1,10 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
+import { User } from '@/models/user';
 import React, { createContext, useState } from 'react';
 
 type UserContextData = {
-  user: {
-    id: string;
-    username: string;
-  };
-  setUser: (user: UserContextData['user']) => void;
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 };
 
 const UserContext = createContext<UserContextData>({} as UserContextData);
@@ -16,9 +14,10 @@ function UserProvider({
 }: {
   children: React.ReactNode;
 }): JSX.Element {
-  const [user, setUser] = useState<UserContextData['user']>(
-    {} as UserContextData['user'],
-  );
+  const [user, setUser] = useState<UserContextData['user']>({
+    id: '1',
+    username: 'ruanpablom',
+  } as UserContextData['user']);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
