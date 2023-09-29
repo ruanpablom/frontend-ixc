@@ -65,7 +65,7 @@ export function Layout(): JSX.Element {
         </div>
       </div>
       <div className="flex justify-center">
-        <div className="max-w-7xl w-full h-[calc(100vh-64px)] md:h-[calc(100vh-100px)]">
+        <div className="flex flex-col justify-center items-center max-w-7xl w-full h-[calc(100vh-64px)] md:h-[calc(100vh-100px)]">
           <Outlet />
         </div>
       </div>
