@@ -2,9 +2,17 @@
 import { useUser } from '@/contexts/user';
 import { NavLink, Outlet } from 'react-router-dom';
 import { BiMessageSquareDetail } from 'react-icons/bi';
+import { User } from '@/models/user';
 
 export function Layout(): JSX.Element {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
+
+  const handleLogout = () => {
+    setUser({} as User);
+    localStorage.removeItem('token');
+  };
+
+  console.info(!user);
 
   return (
     <div>
@@ -21,7 +29,7 @@ export function Layout(): JSX.Element {
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="!flex flex-col items-center justify-center w-10 rounded-full ring ring-accent ring-offset-base-100 ring-offset-2">
                   <span>
-                    {user.username && user.username[0]
+                    {user.id && user.id[0]
                       ? user.username[0].toUpperCase()
                       : 'A'}
                   </span>
@@ -33,12 +41,22 @@ export function Layout(): JSX.Element {
                 className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-neutral rounded-box w-52"
               >
                 <li>
-                  {!user ? (
+                  {!user.id ? (
                     <NavLink to="/login" className="justify-between">
                       Login
                     </NavLink>
                   ) : (
-                    <NavLink to="/signup">Signup</NavLink>
+                    <>
+                      {user.role === 'admin' ? (
+                        <NavLink to="/signup">Signup</NavLink>
+                      ) : (
+                        ''
+                      )}
+
+                      <button type="button" onClick={handleLogout}>
+                        Logout
+                      </button>
+                    </>
                   )}
                 </li>
               </ul>
