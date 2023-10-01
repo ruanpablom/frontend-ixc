@@ -74,7 +74,15 @@ export function Layout(): JSX.Element {
                   ) : (
                     <>
                       {user.role === 'ADMIN' ? (
-                        <NavLink to="/signup">Signup</NavLink>
+                        <NavLink
+                          onClick={() => {
+                            if (window.location.pathname === '/signup')
+                              window.location.reload();
+                          }}
+                          to="/signup"
+                        >
+                          Signup
+                        </NavLink>
                       ) : (
                         ''
                       )}

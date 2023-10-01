@@ -25,6 +25,9 @@ export const signupValidationSchema = z
       .regex(/.*\d.*/, 'Deve possuir um número')
       .regex(/[!@#$%^&*]+/, 'Deve possuir um caracter especial(!@#$%^&*)'),
     passwordConfirmation: z.string(),
+    role: z.enum(['USER', 'ADMIN'], {
+      errorMap: (__, _) => ({ message: 'Informe o tipo de usuário' }),
+    }),
   })
   .refine(data => data.password === data.passwordConfirmation, {
     message: 'Deve ser o mesmo valor da senha',

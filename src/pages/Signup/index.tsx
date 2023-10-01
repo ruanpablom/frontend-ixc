@@ -1,7 +1,10 @@
 import { Input } from '@/components/Input';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { axiosInstance } from '@/services/axios-instance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import { Select } from '@/components/Select';
+import { useMutation } from '@tanstack/react-query';
 import { SignUpValidationSchema, signupValidationSchema } from './validations';
 
 export function Signup(): JSX.Element {
@@ -12,11 +15,44 @@ export function Signup(): JSX.Element {
   } = useForm<SignUpValidationSchema>({
     resolver: zodResolver(signupValidationSchema),
   });
-
   const [message, setMessage] = useState<string>('');
+  const [erro, setErro] = useState<{
+    code: string;
+    message: string;
+    responseStatus: string;
+  }>({} as any);
+
+  const mutation = useMutation<
+    any,
+    { code: string; message: string; responseStatus: string },
+    SignUpValidationSchema
+  >({
+    mutationFn: async data => {
+      try {
+        const res = await axiosInstance.post('/signup', data, {
+          withCredentials: true,
+        });
+        return res.data;
+      } catch (error: any) {
+        // eslint-disable-next-line no-throw-literal
+        throw {
+          code: error.code,
+          message: error.response.data.message,
+          responseStatus: error.response?.status,
+        };
+      }
+    },
+    onError: erro => {
+      setErro(erro);
+      setMessage('Erro ao cadastrar');
+    },
+    onSuccess: () => {
+      setMessage('Cadastro realizado com sucesso');
+    },
+  });
 
   const onSubmit: SubmitHandler<SignUpValidationSchema> = data => {
-    console.info(data);
+    mutation.mutate(data);
   };
 
   return (
@@ -57,16 +93,34 @@ export function Signup(): JSX.Element {
             {...register('passwordConfirmation')}
             errors={errors.passwordConfirmation}
           />
+          <Select
+            id="role"
+            label="User Role"
+            options={['ADMIN', 'USER']}
+            {...register('role')}
+            errors={errors.role}
+          />
 
-          <input
+          <button
             className="btn btn-outline btn-accent w-full disabled:text-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed"
             type="submit"
-            value="CADASTRAR"
             disabled={Object.entries(errors).length > 0}
-          />
+          >
+            {mutation.isLoading ? (
+              <span className="loading loading-spinner loading-lg" />
+            ) : (
+              'CADASTRAR'
+            )}
+          </button>
         </form>
       ) : (
-        <></>
+        <>
+          {!(Object.entries(erro).length > 0) ? (
+            <p>{message}</p>
+          ) : (
+            <p className="text-red-500">{erro.message}</p>
+          )}
+        </>
       )}
     </div>
   );
