@@ -25,8 +25,21 @@ export function Layout(): JSX.Element {
     retry: false,
   });
 
+  const { refetch } = useQuery({
+    queryKey: ['logout'],
+    queryFn: async () => {
+      return axiosInstance
+        .get('/logout', { withCredentials: true })
+        .then(res => res.data);
+    },
+    onSuccess() {
+      setUser({} as User);
+    },
+    enabled: false,
+  });
+
   const handleLogout = () => {
-    setUser({} as User);
+    refetch();
   };
 
   return (
