@@ -14,11 +14,9 @@ function UserProvider({
 }: {
   children: React.ReactNode;
 }): JSX.Element {
-  const [user, setUser] = useState<UserContextData['user']>({
-    id: '1',
-    username: 'ruanpablom',
-    role: 'admin',
-  } as UserContextData['user']);
+  const [user, setUser] = useState<UserContextData['user']>(
+    {} as UserContextData['user'],
+  );
 
   return (
     <UserContext.Provider value={{ user, setUser }}>

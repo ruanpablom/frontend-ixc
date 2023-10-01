@@ -3,16 +3,31 @@ import { useUser } from '@/contexts/user';
 import { NavLink, Outlet } from 'react-router-dom';
 import { BiMessageSquareDetail } from 'react-icons/bi';
 import { User } from '@/models/user';
+import { useQuery } from '@tanstack/react-query';
+import { axiosInstance } from '@/services/axios-instance';
 
 export function Layout(): JSX.Element {
   const { user, setUser } = useUser();
 
+  useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      return axiosInstance
+        .get('/me', { withCredentials: true })
+        .then(res => res.data);
+    },
+    onSuccess(data) {
+      setUser(data);
+    },
+    onError() {
+      setUser({} as User);
+    },
+    retry: false,
+  });
+
   const handleLogout = () => {
     setUser({} as User);
-    localStorage.removeItem('token');
   };
-
-  console.info(!user);
 
   return (
     <div>
@@ -29,9 +44,7 @@ export function Layout(): JSX.Element {
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="!flex flex-col items-center justify-center w-10 rounded-full ring ring-accent ring-offset-base-100 ring-offset-2">
                   <span>
-                    {user.id && user.id[0]
-                      ? user.username[0].toUpperCase()
-                      : 'A'}
+                    {user.id && user.id[0] ? user.name[0].toUpperCase() : 'A'}
                   </span>
                   {/* <img src="/images/stock/photo-1534528741775-53994a69daeb.jpg" /> */}
                 </div>
@@ -47,7 +60,7 @@ export function Layout(): JSX.Element {
                     </NavLink>
                   ) : (
                     <>
-                      {user.role === 'admin' ? (
+                      {user.role === 'ADMIN' ? (
                         <NavLink to="/signup">Signup</NavLink>
                       ) : (
                         ''

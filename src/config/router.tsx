@@ -15,7 +15,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <ProtectedRoute permission="user" erroElement={<NotUser />}>
+          <ProtectedRoute permission="USER" erroElement={<NotUser />}>
             <Home />
           </ProtectedRoute>
         ),
@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
       {
         path: '/signup',
         element: (
-          <ProtectedRoute permission="admin" erroElement={<AccessDenied />}>
+          <ProtectedRoute permission="ADMIN" erroElement={<AccessDenied />}>
             <Signup />
           </ProtectedRoute>
         ),

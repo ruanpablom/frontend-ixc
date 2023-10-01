@@ -1,11 +1,11 @@
 import { UserRole } from '@/models/user';
 
-export function verifyRole(role: UserRole, userRole: UserRole): boolean {
-  if (role === 'user' && (userRole === 'user' || userRole === 'admin')) {
+export function verifyRole(permission: UserRole, userRole: UserRole): boolean {
+  if (permission === 'USER' && (userRole === 'USER' || userRole === 'ADMIN')) {
     return true;
   }
 
-  if (role === 'admin' && userRole === 'admin') return true;
+  if (permission === 'ADMIN' && userRole === 'ADMIN') return true;
 
   return false;
 }
