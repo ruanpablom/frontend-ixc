@@ -1,22 +1,21 @@
 import { useUser } from '@/contexts/user';
 import { Message } from '@/models/message';
 import { useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { BiSend } from 'react-icons/bi';
+import { useSocket } from '@/contexts/socket';
 
 export function InputMessage(): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const { user } = useUser();
+  const { socket } = useSocket();
 
   const handleSendMessage = () => {
     if (inputRef.current?.value) {
       const message: Message = {
-        id: uuidv4(),
-        createdAt: new Date(),
         text: inputRef.current?.value as string,
-        user,
+        userId: user.id,
       };
-      console.info(message);
+      socket.emit('message', message);
       inputRef.current.value = '';
     }
   };

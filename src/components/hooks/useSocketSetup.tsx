@@ -14,6 +14,12 @@ const useSocketSetup = (
     socket.on('messages', (messages: Message[]) => {
       setMessages(messages);
     });
+
+    socket.on('message', (message: Message) => {
+      console.info('message', message);
+      setMessages(prev => [...prev, message]);
+    });
+
     socket.on('connected', (status: boolean, username: string) => {
       console.info('connected', status, username);
     });
@@ -24,6 +30,7 @@ const useSocketSetup = (
       socket.off('connect_error');
       socket.off('connected');
       socket.off('messages');
+      socket.off('message');
     };
   }, [setUser, setMessages, socket]);
 };
