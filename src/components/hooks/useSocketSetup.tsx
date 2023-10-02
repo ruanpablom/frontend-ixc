@@ -1,10 +1,12 @@
 import { useUser } from '@/contexts/user';
 import { Message } from '@/models/message';
+import { User } from '@/models/user';
 import { useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 
 const useSocketSetup = (
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>,
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>,
   socket: Socket,
 ): void => {
   const { setUser } = useUser();
@@ -16,13 +18,31 @@ const useSocketSetup = (
     });
 
     socket.on('message', (message: Message) => {
-      console.info('message', message);
       setMessages(prev => [...prev, message]);
     });
 
-    socket.on('connected', (status: boolean, username: string) => {
-      console.info('connected', status, username);
+    socket.on('connected', (status: boolean, id: string) => {
+      console.info('connected', status, id);
+      setUsers(prev =>
+        prev.map(user =>
+          user.id === id ? { ...user, connected: status } : user,
+        ),
+      );
     });
+
+    socket.on('disconnected', (id: string) => {
+      console.info('connected', id);
+      setUsers(prev =>
+        prev.map(user =>
+          user.id === id ? { ...user, connected: false } : user,
+        ),
+      );
+    });
+
+    socket.on('users', (users: User[]) => {
+      setUsers(users);
+    });
+
     socket.on('connect_error', () => {
       setUser(prev => ({ ...prev, connected: false }));
     });
@@ -31,8 +51,10 @@ const useSocketSetup = (
       socket.off('connected');
       socket.off('messages');
       socket.off('message');
+      socket.off('users');
+      socket.disconnect();
     };
-  }, [setUser, setMessages, socket]);
+  }, [setUser, setMessages, socket, setUsers]);
 };
 
 export default useSocketSetup;

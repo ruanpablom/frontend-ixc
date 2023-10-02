@@ -25,6 +25,6 @@ function UsersProvider({
   );
 }
 
-const useUser = (): UsersContextData => React.useContext(UserContext);
+const useUsers = (): UsersContextData => React.useContext(UserContext);
 
-export { UsersProvider, useUser };
+export { UsersProvider, useUsers };
