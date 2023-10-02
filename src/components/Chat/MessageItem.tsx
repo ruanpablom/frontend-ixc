@@ -17,7 +17,7 @@ export function MessageItem({ message }: MessageItemProps): JSX.Element {
       <div className="flex gap-6 justify-between">
         <span className="text-accent">{message.user?.name}</span>
         <span className="text-sm text-neutral-400">
-          {message.createdAt?.toLocaleString()}
+          {new Date(message.createdAt!).toLocaleString()}
         </span>
       </div>
       <p>{message.text}</p>

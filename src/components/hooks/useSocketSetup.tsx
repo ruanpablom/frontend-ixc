@@ -43,6 +43,10 @@ const useSocketSetup = (
       setUsers(users);
     });
 
+    socket.on('messages', (messages: Message[]) => {
+      setMessages(messages);
+    });
+
     socket.on('connect_error', () => {
       setUser(prev => ({ ...prev, connected: false }));
     });
