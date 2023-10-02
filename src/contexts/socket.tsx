@@ -2,6 +2,8 @@
 import React, { createContext, useState } from 'react';
 import { Socket } from 'socket.io-client';
 
+import { socket as socketConn } from '@/services/socket';
+
 type SocketContextData = {
   socket: Socket;
   setSocket: React.Dispatch<React.SetStateAction<Socket>>;
@@ -14,9 +16,7 @@ function SocketProvider({
 }: {
   children: React.ReactNode;
 }): JSX.Element {
-  const [socket, setSocket] = useState<SocketContextData['socket']>(
-    {} as SocketContextData['socket'],
-  );
+  const [socket, setSocket] = useState<SocketContextData['socket']>(socketConn);
 
   return (
     <SocketContext.Provider value={{ socket, setSocket }}>
