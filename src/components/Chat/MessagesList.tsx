@@ -6,7 +6,9 @@ type MessagesListProps = {
   messages: Message[];
 };
 
-export function MessagesList({ messages }: MessagesListProps): JSX.Element {
+export function MessagesList({
+  messages = [],
+}: MessagesListProps): JSX.Element {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
