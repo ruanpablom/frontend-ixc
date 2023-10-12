@@ -73,6 +73,13 @@ export function Layout(): JSX.Element {
                     </NavLink>
                   ) : (
                     <>
+                      <NavLink
+                        className="flex flex-col gap-0 items-start"
+                        to="/me"
+                      >
+                        <span className="text-sm">{user.name}</span>
+                        <span className="text-xs">Prefil</span>
+                      </NavLink>
                       {user.role === 'ADMIN' ? (
                         <NavLink
                           onClick={() => {

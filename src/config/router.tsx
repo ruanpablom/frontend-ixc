@@ -1,8 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
-import { Home } from '@/pages/Home';
-import { Login } from '@/pages/Login';
-import { Signup } from '@/pages/Signup';
+import { Home, Login, Signup, Profile } from '@/pages';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { NotUser } from '@/components/ProtectedRoute/NotUser';
 import { AccessDenied } from '@/components/ProtectedRoute/AccessDenied';
@@ -26,6 +24,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute permission="ADMIN" erroElement={<AccessDenied />}>
             <Signup />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/me',
+        element: (
+          <ProtectedRoute permission="USER" erroElement={<NotUser />}>
+            <Profile />
           </ProtectedRoute>
         ),
       },

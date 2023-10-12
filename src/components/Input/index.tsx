@@ -9,7 +9,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export const Input = forwardRef(
   ({ label, errors, ...props }: InputProps, ref: Ref<HTMLInputElement>) => {
     return (
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full items-start">
         <label htmlFor={props.id} className="text-accent">
           {label}
         </label>
