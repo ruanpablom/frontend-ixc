@@ -42,6 +42,13 @@ export function Layout(): JSX.Element {
     refetch();
   };
 
+  const handleClick = () => {
+    const elem = document.activeElement as HTMLElement;
+    if (elem) {
+      elem.blur();
+    }
+  };
+
   return (
     <div>
       <div className="navbar bg-neutral flex justify-center">
@@ -68,23 +75,29 @@ export function Layout(): JSX.Element {
               >
                 <li>
                   {!user.id ? (
-                    <NavLink to="/login" className="justify-between">
+                    <NavLink
+                      onClick={handleClick}
+                      to="/login"
+                      className="justify-between"
+                    >
                       Login
                     </NavLink>
                   ) : (
                     <>
                       <NavLink
                         className="flex flex-col gap-0 items-start"
+                        onClick={handleClick}
                         to="/me"
                       >
                         <span className="text-sm">{user.name}</span>
-                        <span className="text-xs">Prefil</span>
+                        <span className="text-xs">Profile</span>
                       </NavLink>
                       {user.role === 'ADMIN' ? (
                         <NavLink
                           onClick={() => {
                             if (window.location.pathname === '/signup')
                               window.location.reload();
+                            handleClick();
                           }}
                           to="/signup"
                         >
