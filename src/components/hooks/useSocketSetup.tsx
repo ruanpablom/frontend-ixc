@@ -1,6 +1,7 @@
 import { useUser } from '@/contexts/user';
 import { Message } from '@/models/message';
 import { User } from '@/models/user';
+import { orderUsersByNameAndConnectionsStatus } from '@/utils/orderUsersByNameAndConnectionsStatus';
 import { useEffect } from 'react';
 import { Socket } from 'socket.io-client';
 
@@ -36,24 +37,27 @@ const useSocketSetup = (
     socket.on('newUserConnected', (status: boolean, id: string) => {
       console.info('newUserConnected', status, id);
       setIsChatOnline(true);
-      setUsers(prev =>
-        prev.map(user =>
+      setUsers(prev => {
+        const newUsers = prev.map(user =>
           user.id === id ? { ...user, connected: status } : user,
-        ),
-      );
+        );
+
+        return orderUsersByNameAndConnectionsStatus(newUsers);
+      });
     });
 
     socket.on('disconnectedUser', (userId: string) => {
       console.info('disconnectedUser', userId);
-      setUsers(prev =>
-        prev.map(user =>
+      setUsers(prev => {
+        const newUsers = prev.map(user =>
           user.id === userId ? { ...user, connected: false } : user,
-        ),
-      );
+        );
+        return orderUsersByNameAndConnectionsStatus(newUsers);
+      });
     });
 
     socket.on('users', (users: User[]) => {
-      setUsers(users);
+      setUsers(orderUsersByNameAndConnectionsStatus(users));
     });
 
     socket.on('connect_error', () => {
